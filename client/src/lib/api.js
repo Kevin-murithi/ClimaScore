@@ -12,4 +12,3 @@ export async function apiFetch(path, options = {}) {
   const opts = { credentials: 'include', ...options }
   return fetch(url, opts)
 }
-``

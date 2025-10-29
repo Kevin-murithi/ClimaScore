@@ -18,6 +18,7 @@ app.use(cookieParser());
 const corsOptions = {
   origin: ['http://localhost:5174', 'http://localhost:5173', 'https://clima-score.vercel.app'], 
   allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials: true,
   optionsSuccessStatus: 200
 };
