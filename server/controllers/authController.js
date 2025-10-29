@@ -27,6 +27,13 @@ const handleErrors = (err) => {
 }
 
 const maxAge = 3 * 24 * 60 * 60;
+const isProd = process.env.NODE_ENV === 'production'
+const cookieOptions = {
+  httpOnly: true,
+  maxAge: maxAge * 1000,
+  secure: isProd,
+  sameSite: isProd ? 'none' : 'lax'
+}
 const createToken = (id, role) => {
     return jwt.sign({id, role}, 'kevin secret', {
         expiresIn: maxAge
@@ -45,7 +52,7 @@ module.exports.register = async(req, res) =>{
             role: ['farmer','lender','cold_storage_owner'].includes(role) ? role : 'farmer'
         });
         const token = createToken(user._id, user.role);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: false, sameSite: 'lax'});
+        res.cookie('jwt', token, cookieOptions);
         res.status(201).json({user: user._id, role: user.role, token});
         console.log(token);
     }
@@ -60,7 +67,7 @@ module.exports.login = async(req, res) =>{
     try { 
         const user = await User.login(email, password);
         const token = createToken(user._id, user.role);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: false, sameSite: 'lax'});
+        res.cookie('jwt', token, cookieOptions);
         res.status(200).json({ user: user._id, role: user.role, token});
     }
     catch (err) {
@@ -70,7 +77,7 @@ module.exports.login = async(req, res) =>{
 }
 
 module.exports.logout = async (req, res) => {
-    res.cookie('jwt', '', { maxAge: 1});
+    res.cookie('jwt', '', { maxAge: 1, secure: cookieOptions.secure, sameSite: cookieOptions.sameSite, httpOnly: true });
     res.redirect('/')
 }
 

@@ -13,6 +13,8 @@ const cors = require('cors');
 const { checkAuth, requireRole } = require('./middleware/authMiddleware.js');
 
 const app = express();
+// Trust reverse proxy (Vercel/NGINX/etc.) so Secure cookies are respected
+app.set('trust proxy', 1)
 app.use(express.json())
 app.use(cookieParser());
 const corsOptions = {
