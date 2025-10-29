@@ -13,4 +13,8 @@ export default defineConfig({
   plugins: [
     react(), tailwindcss()
   ],
+  server: {
+    host: '0.0.0.0', // Allow all hosts (LAN, Live Share tunnel)
+    strictPort: true, // Ensure port 5173 is used
+  }
 })
